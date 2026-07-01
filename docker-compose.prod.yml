@@ -1,39 +1,16 @@
-version: '3.8'
+# Card & Payment Fraud Detection — production stack
+#
+#   browser ──TLS :7777──► host nginx ──/fraud-detection/──► 127.0.0.1:4779 ──► dashboard container (nginx :8080)
+#
+# This is a SELF-CONTAINED, static-only project: the container serves the
+# prebuilt React dashboard under /fraud-detection/. There is NO backend and NO
+# database. The host nginx only needs to proxy the /fraud-detection/ prefix to
+# this container's loopback port (see NGINX-DEPLOY-GUIDE.md).
+#
+# Port assignment (project-specific; 4773 is already used by chargeback_backend):
+#   4779 — dashboard (container nginx serving the SPA on :8080)
 
 services:
-  nginx-proxy:
-    image: jwilder/nginx-proxy:latest
-    container_name: nginx-proxy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx/certs:/etc/nginx/certs:rw
-      - ./nginx/vhost.d:/etc/nginx/vhost.d:rw
-      - ./nginx/html:/usr/share/nginx/html:ro
-      - ./nginx/acme:/etc/acme.sh
-    networks:
-      - proxy
-
-  acme-companion:
-    image: nginxproxy/acme-companion:latest
-    container_name: nginx-proxy-acme
-    restart: unless-stopped
-    environment:
-      - NGINX_PROXY_CONTAINER=nginx-proxy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./nginx/certs:/etc/nginx/certs:rw
-      - ./nginx/vhost.d:/etc/nginx/vhost.d:rw
-      - ./nginx/html:/usr/share/nginx/html:rw
-      - ./nginx/acme:/etc/acme.sh
-    depends_on:
-      - nginx-proxy
-    networks:
-      - proxy
-
   dashboard:
     build:
       context: .
@@ -41,13 +18,12 @@ services:
     image: fraud-dashboard:latest
     container_name: fraud-dashboard
     restart: unless-stopped
-    environment:
-      - VIRTUAL_HOST=app.example.com
-      - LETSENCRYPT_HOST=app.example.com
-      - LETSENCRYPT_EMAIL=you@example.com
-    networks:
-      - proxy
-
-networks:
-  proxy:
-    name: proxy
+    ports:
+      # Loopback only — the host nginx (TLS :7777) reverse-proxies
+      # /fraud-detection/ to this port. Not exposed publicly by the container.
+      - "127.0.0.1:4779:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

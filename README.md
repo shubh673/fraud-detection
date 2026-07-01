@@ -158,9 +158,11 @@ PowerShell equivalent for steps 1–3:
 The whole thing (pipeline + dashboard) is containerised:
 
 ```bash
-docker compose up -d --build     # builds, then serves on http://localhost/
+docker compose up -d --build     # builds, then serves on http://localhost/fraud-detection/
 ```
 
+To deploy behind the host nginx at **https://ai.arttechgroup.com:7777/fraud-detection/**,
+see **[DEPLOY.md](DEPLOY.md)** and **[NGINX-DEPLOY-GUIDE.md](NGINX-DEPLOY-GUIDE.md)**.
 To deploy live on AWS EC2, see **[DEPLOY_AWS_EC2.md](DEPLOY_AWS_EC2.md)**.
 
 ### Why this order is mandatory

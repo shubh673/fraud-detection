@@ -1,5 +1,12 @@
-# Convenience wrapper: `docker compose up -d --build` builds and serves the
-# dashboard on http://<host>/  (port 80).
+# Convenience wrapper for LOCAL testing:
+#   docker compose up -d --build
+# builds the pipeline + dashboard and serves it on
+#   http://localhost/fraud-detection/
+#
+# The container serves the SPA under the /fraud-detection/ base path (same as
+# production), so browse to the /fraud-detection/ URL, not the bare host.
+# For the real deployment behind the host nginx on :7777 use
+# docker-compose.prod.yml (see DEPLOY.md / NGINX-DEPLOY-GUIDE.md).
 services:
   dashboard:
     build:
@@ -8,5 +15,5 @@ services:
     image: fraud-dashboard:latest
     container_name: fraud-dashboard
     ports:
-      - "80:80"
+      - "80:8080"
     restart: unless-stopped
