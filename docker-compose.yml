@@ -1,0 +1,12 @@
+# Convenience wrapper: `docker compose up -d --build` builds and serves the
+# dashboard on http://<host>/  (port 80).
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fraud-dashboard:latest
+    container_name: fraud-dashboard
+    ports:
+      - "80:80"
+    restart: unless-stopped

@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+/*
+  Dark "IRIS-style" theme.
+  Palette is restricted to: black, dark greys, white, yellow and gold.
+
+  Strategy: most of the app uses Tailwind colour utilities (slate / blue /
+  indigo / emerald / amber / red / sky). Rather than editing every className,
+  we remap those colour TOKENS here via @theme so the whole UI recolours:
+
+    - slate  -> a dark neutral ramp (low shades = dark surfaces, high = light text)
+    - blue / indigo / sky -> YELLOW  (primary accent)
+    - amber / orange       -> GOLD    (caution / high)
+    - emerald              -> GREY    (calm / positive-neutral)
+    - red                  -> HOT YELLOW (strong alert / decline)
+
+  `white`, `black`, `yellow` and `neutral` keep their Tailwind defaults
+  (all within the allowed palette).
+*/
+@theme {
+  /* ---- neutral surfaces & text (slate remapped to a dark ramp) ---- */
+  --color-slate-50: #1a1a1e; /* raised surfaces: table head, hover, pills */
+  --color-slate-100: #26262b; /* subtle borders / dividers */
+  --color-slate-200: #2f2f36; /* borders, rings */
+  --color-slate-300: #3f3f47; /* stronger borders, disabled */
+  --color-slate-400: #8b8b94; /* dim text / icons */
+  --color-slate-500: #a1a1aa; /* muted text */
+  --color-slate-600: #bcbcc4; /* secondary text */
+  --color-slate-700: #d4d4db; /* body text */
+  --color-slate-800: #e9e9ee; /* headings */
+  --color-slate-900: #f6f6f6; /* strong headings */
+  --color-slate-950: #ffffff;
+
+  /* ---- primary accent: blue -> yellow ---- */
+  --color-blue-50: #211d0a;
+  --color-blue-100: #2e2810;
+  --color-blue-200: #4a3f13;
+  --color-blue-300: #7a6510;
+  --color-blue-400: #b8930c;
+  --color-blue-500: #facc15;
+  --color-blue-600: #eab308;
+  --color-blue-700: #fde047;
+  --color-blue-800: #fef08a;
+  --color-blue-900: #d4af37; /* golden (used as KPI accent border) */
+  --color-blue-950: #78350f;
+
+  /* ---- indigo -> yellow/gold (overlay chips, merchant accents) ---- */
+  --color-indigo-50: #211d0a;
+  --color-indigo-100: #2e2810;
+  --color-indigo-200: #4a3f13;
+  --color-indigo-300: #7a6510;
+  --color-indigo-400: #b8930c;
+  --color-indigo-500: #eab308;
+  --color-indigo-600: #d4af37;
+  --color-indigo-700: #fde047;
+  --color-indigo-800: #fef08a;
+  --color-indigo-900: #d4af37;
+
+  /* ---- sky -> yellow (info note banner) ---- */
+  --color-sky-50: #211d0a;
+  --color-sky-100: #2e2810;
+  --color-sky-200: #4a3f13;
+  --color-sky-700: #fde047;
+  --color-sky-800: #fde047;
+  --color-sky-900: #fef3c7;
+
+  /* ---- amber / orange -> gold (caution / high) ---- */
+  --color-amber-50: #2a2205;
+  --color-amber-100: #382d08;
+  --color-amber-200: #574413;
+  --color-amber-300: #eab308;
+  --color-amber-400: #f0b429;
+  --color-amber-500: #f59e0b;
+  --color-amber-700: #fbbf24;
+  --color-amber-800: #fcd34d;
+  --color-amber-900: #fde68a;
+
+  --color-orange-50: #2a2205;
+  --color-orange-100: #382d08;
+  --color-orange-200: #574413;
+  --color-orange-500: #f59e0b;
+  --color-orange-700: #fbbf24;
+  --color-orange-800: #fde047;
+
+  /* ---- emerald -> grey (calm / positive-neutral) ---- */
+  --color-emerald-50: #1a1a1e;
+  --color-emerald-100: #232327;
+  --color-emerald-200: #2f2f36;
+  --color-emerald-300: #52525b;
+  --color-emerald-500: #a1a1aa;
+  --color-emerald-600: #bcbcc4;
+  --color-emerald-700: #d4d4db;
+  --color-emerald-800: #e5e5ea;
+
+  /* ---- red -> hot yellow (strong alert / decline / error) ---- */
+  --color-red-50: #2a2205;
+  --color-red-100: #382d08;
+  --color-red-200: #574413;
+  --color-red-300: #a16207;
+  --color-red-400: #eab308;
+  --color-red-500: #facc15;
+  --color-red-600: #eab308;
+  --color-red-700: #fde047;
+  --color-red-800: #fef08a;
+  --color-red-900: #fef9c3;
+}
+
+:root {
+  /* near-black sidebar / chrome */
+  --navy-900: #0c0c0e;
+  --navy-800: #121214;
+  --navy-700: #1a1a1e;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #0a0a0a;
+  color: #e9e9ee;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* native form controls render dark */
+select,
+option,
+input {
+  color-scheme: dark;
+}
+
+/* thin scrollbars for data tables */
+.thin-scroll::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: #3f3f47;
+  border-radius: 8px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}

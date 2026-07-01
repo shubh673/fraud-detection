@@ -1,0 +1,4 @@
+merchant_id,Merch_ID_DE42,blacklist_reason,effective_date,action
+M0000182,MID335575017,Confirmed transaction laundering ring,2026-01-15,decline
+M0000197,MID242772211,Repeated confirmed fraud and high chargebacks,2026-02-01,decline
+M0000081,MID629078156,Under investigation - elevated laundering risk,2026-03-10,step_up
