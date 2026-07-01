@@ -35,9 +35,12 @@ RUN python src/train_step1_model.py \
 FROM node:20-slim AS frontend
 WORKDIR /app/frontend
 
-# Install deps first (better layer caching)
+# Install deps first (better layer caching). Use `npm install` rather than
+# `npm ci` so a package-lock.json generated on another platform (e.g. Windows)
+# still builds here — Tailwind v4 pulls in platform-specific optional deps that
+# a cross-platform lock file may not fully capture.
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install
 
 # App source, then overlay the pipeline-generated data before building.
 # Vite base (/fraud-detection/) is set in frontend/vite.config.ts.
