@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy:latest
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/certs:/etc/nginx/certs:rw
+      - ./nginx/vhost.d:/etc/nginx/vhost.d:rw
+      - ./nginx/html:/usr/share/nginx/html:ro
+      - ./nginx/acme:/etc/acme.sh
+    networks:
+      - proxy
+
+  acme-companion:
+    image: nginxproxy/acme-companion:latest
+    container_name: nginx-proxy-acme
+    restart: unless-stopped
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./nginx/certs:/etc/nginx/certs:rw
+      - ./nginx/vhost.d:/etc/nginx/vhost.d:rw
+      - ./nginx/html:/usr/share/nginx/html:rw
+      - ./nginx/acme:/etc/acme.sh
+    depends_on:
+      - nginx-proxy
+    networks:
+      - proxy
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fraud-dashboard:latest
+    container_name: fraud-dashboard
+    restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=app.example.com
+      - LETSENCRYPT_HOST=app.example.com
+      - LETSENCRYPT_EMAIL=you@example.com
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    name: proxy
